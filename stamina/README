@@ -1,0 +1,389 @@
+# Instamint
+
+# Introduction
+
+_Instamint_ is a young startup which allows NFTs & crypto enthusiasts to discover, collect and exchange NFTs and much more!
+
+Founded by Richard Lenoir, Rackham Lerouge et René Leblanc, who share a common passion for digital art and the blockchain, the company's focus is to be more than just a marketplace for NFTs. Indeed, _Instamint_ wants to create a large community of digital art enthusiasts but also bring in experts and galleries in order to create a real ecosystem which lives in symbioses.
+
+_Instamint_ is looking for a developer team to build the first version of their product, which will be referred as the `alpha` in this document. While we mainly focus our call for tenders to provide a detailed offer for the `alpha`, we are open to receive offers including in their quote the next version (which is called `beta`).
+
+# Functional Specifications
+
+## Misc
+
+- all public URLs must be "crawlable" by SEO crawlers (i.e you must render HTML pages, no full dynamic pages), which includes public pages such as "terms", "privacy policy", etc.;
+- not signed users must be greeted with a privacy & data collection popup asking their permission according to the laws of their countries' laws.
+
+## Terms
+
+### _MINT_
+
+Instead of using "likes" we are using "mints" represented by a small mint icon.
+
+### _MINTER_
+
+Another name for a user.
+
+### _TEA BAG_
+
+A _TEA BAG_ is simply a group of _MINTERS_ appearing as a single one (profile) with all _MINTERS_ having the same rights on the _TEA BAG_. Can be used for creating new collections, giving early access to buyers, etc.
+
+### _Cook_
+
+A _MINTER_ who is in a _TEA BAG_.
+
+## Epics
+
+### _MINTER_ Registration and Login:
+
+- As a _MINTER_, I can create an account, when I provide my e-mail and a password.
+  - _MINTER_ needs to activate their account through secure e-mail activation
+  - e-mail\*
+  - password\* (secure pattern!)
+  - username\*
+  - default author data (can be changed later in settings)
+- As a _MINTER_, I can log in to my account, when I enter my e-mail and password.
+- As a _MINTER_, I can reset my password.
+- As a _MINTER_, I can delete my account.
+  - soft delete with a scheduled deletion in 6 months (as we need to retain commercial data in case of legal issues).
+
+### _MINTER_ Privacy/Security Settings:
+
+- As a _MINTER_, I can securely change my password.
+- As a _MINTER_, I can securely change my e-mail.
+- As a _MINTER_, I can add or remove a 2FA authentication.
+  - use a generic MFA app with time-based generated short codes
+  - if added (i.e active), the MFA should add another step during sign-in to ask for the code
+- As a _MINTER_, I can enable "search by e-mail or phone number" feature.
+  - if active, anyone can find the _MINTER_ with his account's e-mail
+  - disabled by default
+- As a _MINTER_, I can import my contacts from my phone's contacts or social network account.
+- As a _MINTER_, I can change the visibility of my profile.
+  - either private or public
+  - if going from private to public, warn _MINTER_ that all pending follow requests will be automatically accepted
+- As a _MINTER_, I can change the app's interface language.
+  - english, french and spanish (for now, but the code should allow us to add more later)
+  - provide a i18n solution that allows ICU message format
+
+### Profile Creation and Customization:
+
+- As a _MINTER_, I can change my profile's username, if not already taken.
+- As a _MINTER_, I can change my profile's picture by uploading it picture.
+- As a _MINTER_, I can change my profile's bio.
+- As a _MINTER_, I can change my profile's unique link.
+
+### Social Features (single _MINTER_):
+
+- As a _MINTER_, I can see users' profile.
+  - username (public)
+  - bio (private)
+  - link (private)
+  - _TEA BAG_ memberships (private)
+  - number of followers (public)
+  - number of followed (public)
+- As a _MINTER_, I can see on a _MINTER_'s profile, the list of his NFTs.
+  - most recent ones first
+  - cropped into a square grid
+- As a _MINTER_, I can like/dislike an NFT.
+  - increment/decrement the number of "Mint"s under the NFT
+  - send grouped notification to owner
+  - grouping should be done with time range of 1h
+- As a _MINTER_, I can comment on an NFT.
+  - max 300 characters
+  - detect first hand offensive generic words/expressions
+  - can be a reply to another comment
+  - can mention any username with `@` as long as: it's the original poster or someone who posted before me in the same thread of comment (parent comment or same level of nesting)
+  - mentions should be limited to 3 max.
+  - notify author
+  - notify _MINTER_ if it's a reply
+  - notify _MINTER_ if there's a mention
+- As a _MINTER_, I can fold/unfold comments thread.
+  - by default folded
+  - show number of comments when folded
+  - unfolding show 20 first comments
+- As a _MINTER_, I can load more comments.
+  - by default only loads 20 first comments
+  - show "show more comments" button to load more (20 per click)
+- As a _MINTER_, I can share a link to a specific NFT.
+- As a _MINTER_, I can share a link to a specific _MINTER_'s profile.
+- As a _MINTER_, I can follow other users.
+  - if profile is private, sends a follow request
+- As a _MINTER_, I can accept or ignore follow requests from other users.
+  - in case of private profiles
+  - when accepted, requester should receive a notification that his request has been accepted
+  - when ignored, requester should not be informed, and request should be moved to a "ignored" section
+- As a _MINTER_, I can send private messages to other users
+  - only to those I follow and they follow back
+  - message length 1000 characters (emojis count as 1 character per emoji)
+  - should show emojis using Instamint custom designed emojis (use placeholder until design is ready)
+- As a _MINTER_, I can report a _MINTER_ (profile).
+- As a _MINTER_, I can report an NFT.
+- As a _MINTER_, I can report a comment.
+
+### Social Features (multi _MINTERS_ aka _TEA BAG_):
+
+- As a _MINTER_, I can create a _TEA BAG_ (club).
+  - just like a _MINTER_ public profile + extra
+    - username
+    - bio
+    - link
+    - number of followers (includes whitelist)
+    - number of followed
+    - number of "Cook"s (managers of the _TEA BAG_)
+    - list of NFTs
+    - whitelist (always private)
+    - white list start date/time (only if not already passed)
+  - "Cook"s automatically follow the _TEA BAG_
+  - "Cook"s have all the same CRUD rights as with their own
+- As a _COOK_, I can manage the NFTs of the _TEA BAG_ I'm member of.
+- As a _COOK_, I can manage the _TEA BAG_ profile:
+  - change all entries (eg. bio, link, etc.)
+- As a _COOK_, I can delete the _TEA BAG_ profile.
+- As a _MINTER_, I can report a _TEA BAG_.
+
+### Search:
+
+- As a _MINTER_, I can search NFTs.
+  - using #hashtags
+  - using @username
+  - using any terms in the NFT description
+  - using a price range
+  - using location
+- As a _MINTER_, I can search users/_TEA BAGS_.
+  - using @username
+  - using location
+
+### Notifications
+
+- As a _MINTER_, I can see the list of all my notifications.
+- As a _MINTER_, I can disable notification by type.
+  - can disable all at once
+  - types are: replies in comments, comment threads, likes, follow, follow request accepted
+- As a _MINTER_, I can ignore all comments related to a specific NFT from the notification list
+
+### Cryptocurrency Integration:
+
+- As a _MINTER_, I can add cryptocurrencies to my wallet
+- As a _MINTER_, I can buy and sell NFTs using my cryptocurrency wallet
+
+### Original Content Management:
+
+- As a _MINTER_, I can upload an original content.
+  - allowed types are: png, webp, ogg, flac
+  - any 0B < size <= 1GB is technically allowed as long as the file is valid
+  - _MINTER_ must agree with terms (link to the terms) on every upload
+  - check that the media is not already uploaded
+- As a _MINTER_, I can delete any of my own original content.
+- As a _MINTER_, I can create a draft from my uploaded original content before making
+  - a single CTA button being either blue for save or green to mint (ie. all required fields are valid)
+  - description\* (cannot contain @username, nor #hashtags)
+  - author name\* (autofill with current _MINTER_ info, from settings)
+  - hashtags: max 5
+  - location
+
+### NFT Trading and Marketplace:
+
+- As a _MINTER_, I can mint my uploaded digital content (a draft) into an NFT.
+  - draft must be completed
+  - must select through which marketplace I want to mint and sell my NFT
+- As a _MINTER_, I can buy NFTs from other users, when I find an NFT I like in the marketplace.
+- As a _MINTER_, I can sell my NFTs in the marketplace.
+- As a _MINTER_, I can trade NFTs with other users, when I find a _MINTER_ interested in trading their NFT.
+
+### Admin Dashboard:
+
+- As an admin, I can disable a _MINTER_'s account.
+- As an admin, I can delete a _MINTER_'s account.
+- As an admin, I can delete a _TEA BAG_.
+- As an admin, I can delete an NFT.
+- As an admin, I can delete a comment.
+- As an admin, I can list all reports.
+- As an admin, I can see a dashboard with different analytics.
+  - 3 rows: daily, monthly, diff. n2 - n1 (last month <> this month)
+  - all rows have:
+    - count "Mints"
+    - count comments
+    - count comments/NFT
+    - count "Mints"/NFT
+    - count "Mints" + comments/NFT
+    - count active _MINTER_
+    - count NFT viewed/_MINTER_
+    - count profile viewed/_MINTER_
+
+# Privacy
+
+Every feature and technical procedure & fixture must comply with the European law, especially regarding the General Data Protection Regulation.
+
+Your offer must mention all the necessary articles for each regulated elements of the platform, while offering a clear solution, proving that the law has not been broken and that the platform can run safely and in respect of the law.
+
+For instance, the offer must exhaustively declare all the items of data processing and retention details of such data.
+
+# Technical specifications & limits
+
+As we are building a marketplace, we are very demanding on the quality of the technical work as much as on the legal part.
+
+The following must be implemented and enforced in the deliverables and processes of the offer:
+
+- all written code must be properly linted;
+- all written code must follow best practice in terms of security, maintainability and readability;
+- all written code must versioned on GitHub platform in a single repository to which access will be granted to _Instamint_ during the whole development process;
+- all structural mutation of assets (e.g database, object storage, etc) must follow a documented migration and deployment process with due measures;
+- the database choice must be the best fit for a e-commerce marketplace app and ensure data integrity;
+- the platform must be architected to handle large loads (> 1000 req/s) and thus be scalable in all aspects (scalable reads & writes).
+
+## Design Specifications
+
+- We want you to be creative and are open to new ideas!
+- We would like to provide you only with a few constraints such as our logo, a palette, etc.;
+- All sizes which are not expressed in % must be done with `rem` and translated from a unit sized defined below. This will ensure that the app will resize properly according the selected font size and thus be as responsive to zooming as possible;
+- You may change everything as long as you validate it with us first;
+- This can be used a generic idea of what we want to achieve: https://v0.dev/r/Km3L8x4C8ZZ (be sure to use a mobile viewport size!)
+
+### Color palette
+
+#### Accent
+
+- `#16502d`
+- `#37c871`
+- `#55ff99`
+- `#b3ff80`
+
+#### Neutral
+
+- Dark `#4a504d`
+- Medium `#b7c8ba`
+- Light `#e0f0e4`
+
+### Spacing
+
+#### Unit
+
+A single unit is 4px, represented by `U`.
+
+E.g: `4U === 16px`.
+
+#### Padding
+
+- When used with text, x/y padding ration must be `3/2 ratio` on small screens, `4/3 ratio` with large screen;
+- When used with non-text, keep `1/1 ratio`;
+- Default padding for any content should be `1.5U` for content spacing, and `1U` for border spacing;
+- Padding should never be used to replace margins.
+
+#### Margin
+
+- Margins should only be used to space different logical blocks limited with or not by borders;
+- Default margin (both x and y): `2U`;
+- Prefer specifying top margins instead of bottom one's in order to keep logical flow when adding content.
+
+#### Border
+
+- If used on all sides used Neutral Medium color;
+- If used as a horizontal ruler, use either Neutral Dark `1/4U` or Neutral Medium `1/2U` or Neutral Light `1U`;
+- Please avoid adding borders if possible.
+
+### Font
+
+#### Title
+
+- size: `8U`
+- weight: `900`
+
+#### Heading
+
+- size: `6U`
+- weight: `700`
+
+#### Subheading
+
+- size: `5U`
+- weight: `700`
+
+#### Body
+
+- size: `4U`
+- weight: `500`
+
+#### Small
+
+- size: `5/2U`
+- weight: `400`
+
+### Misc
+
+#### Rounding
+
+- We do not want rounded design;
+- But we may accept extra little rounded corners on actionable elements.
+
+#### Consistency
+
+- Any decision made on a component must be enforced everywhere else;
+- All components must share consistent relation in terms of size, colors, etc.
+
+## Security
+
+At _Instamint_, we are very serious and regarding when it comes to security as we are dealing our customers assets, may they amount to a very large or little value. Thus, the following requirements are mandatory to make the offer acceptable:
+
+- all third-party services/providers accounts must be protected with a unique password and if MFA is available, must be activated;
+- all third-party source code must assessed and audited through third-party services;
+- the whole source code of the project or any configuration file must _not_ contain any "secrets" or confidential data, as well as the source code repository itself, in any way, be it in its current state or in saved past versions;
+- passwords and more generally any sensitive information must be following best practices in terms of generation, storage and access.
+
+# Sustainability
+
+As much as we love NFTs, we love sustainability too and are aware of the impact it may cause. As such we believe that digital art is a much _greener_ way to consume art in general. Yet, we think it's not enough and we require all offers to provide a sustainable solution, in compliance with the direction taken by the European Green Deal and more specifically European Climate Law.
+
+Obviously, we understand that any service will inevitably produce opposite effect on sustainability, but we believe that different measures can be found to limit and reduce it.
+
+We would like to hint at the hosting services which offer sustainable solutions, but also at the possibilities pertaining to the overall architecture of the offer.
+
+# Deliverables & Timeline
+
+## Deliverables
+
+1. full access to the private repository of source code of anything written for building and running the platform, which includes but is not limited to:
+
+- web app;
+- mobile app;
+- admin web app;
+
+2. full access to the hosting platform and its resources (the platform must delivered up and running _online_);
+
+3. detailed documentation on how to deploy and operate the platform.
+
+The functional scope is that of the specification mentioned herein.
+
+## Timeline
+
+We will only accept offers that deliver within 3 months.
+
+# Budget & Payment Terms
+
+## Budget
+
+We are open to any reasonable amount which is justified by the work required to achieve the goals as describe herein.
+
+## Quote
+
+A formal quote including the detailed agile scheduling of all _Epics_ of the `alpha` and the detailed pricing for the initial fixed cost for developing the platform as well as the details of the future recurring costs (such as hosting) must be provided.
+
+## Payment
+
+The payment will be done in two terms:
+
+1. 25% once your offer is accepted and a contract is established;
+2. 75% at the delivery of _all_ deliverables.
+
+## Evaluation and submission
+
+The evaluation will be done through two important criteria:
+
+1. How closely the offer is following the requirements (both functional and technical) provided herein;
+2. How innovative and sustainable solution is the offer.
+
+The submission must be done through e-mail, by sending a unique PDF file of max. 30 pages at the following address: avetis - at - kazarian - dot - fr
+
+## Contact Information
+
+You may contact us for any inquiry at avetis - at - kazarian - dot - fr
